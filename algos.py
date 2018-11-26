@@ -1,5 +1,6 @@
 
 import bt
+import pandas as pd
 
 class SelectWhere(bt.Algo):
 
@@ -28,6 +29,35 @@ class SelectWhere(bt.Algo):
 
             # save in temp - this will be used by the weighing algo
             target.temp['selected'] = selected
+
+        # return True because we want to keep on moving down the stack
+        return True
+
+class WeighTarget(bt.Algo):
+    """
+    Sets target weights based on a target weight DataFrame.
+
+    Args:
+        * target_weights (DataFrame): DataFrame containing the target weights
+
+    Sets:
+        * weights
+
+    """
+
+    def __init__(self, target_weights):
+        self.tw = target_weights
+
+    def __call__(self, target):
+        # get target weights on date target.now
+        if target.now in self.tw.index:
+            w = self.tw.ix[target.now]
+            print(self.tw)
+            print(self.tw.ix[target.now])
+            # w = pd.DataFrame(w)
+            # save in temp - this will be used by the weighing algo
+            # also dropping any na's just in case they pop up
+            target.temp['weights'] = w
 
         # return True because we want to keep on moving down the stack
         return True

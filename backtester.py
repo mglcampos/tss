@@ -1,11 +1,16 @@
 
 import bt
 import pandas as pd
-
+from algos import WeighTarget
 class Backtest():
 
-    def __init__(self):
-        self.ticker_list = self._retrieve_tickers()
+    def __init__(self, tickers=None):
+
+        if tickers == None:
+            self.ticker_list = self._retrieve_tickers()
+        else:
+            self.ticker_list = tickers
+
         self.data = self._load_data(self.ticker_list)
 
     def _retrieve_tickers(self):
@@ -25,7 +30,7 @@ class Backtest():
                            parse_dates=True, index_col=0)
             df = df[df.index > '2017-01-01']
             df.index.name = 'Date'
-            df.columns = [ticker.split(':')[0]]
+            #df.columns = [ticker.split(':')[0]]
             df = df.iloc[::-1]
             if comb_index is None:
                 comb_index = df.index
@@ -36,11 +41,11 @@ class Backtest():
             data[ticker] = df
             data = data.reindex(index=comb_index, method='pad')
             data.fillna(inplace=True, method='ffill')
-        print(data.head())
+        # print(data.head())
         # print(comb_index)
 
-        data.plot()
-        print(data)
+        # data.plot()
+
         return data
 
     def above_sma(self, tickers, sma_per=50, start='2010-01-01', name='above_sma'):
@@ -53,31 +58,59 @@ class Backtest():
 
 
         # calc sma
-        sma = self.data.rolling(sma_per).mean()
+        sma9 = self.data.rolling(9).mean()
+        sma21 = self.data.rolling(21).mean()
+        sma100 = self.data.rolling(100).mean()
         from algos import SelectWhere
         # create strategy
-        s = bt.Strategy(name, [SelectWhere(self.data > sma),
+        s = bt.Strategy(name, [SelectWhere((self.data > sma100)),
                                bt.algos.WeighEqually(),
                                bt.algos.Rebalance()])
 
         # now we create the backtest
         return bt.Backtest(s, self.data)
 
+    def ma_cross(self, ticker, start='2010-01-01',
+                 short_ma=50, long_ma=200, name='ma_cross'):
+        # these are all the same steps as above
+        #
+        print(self.data.head())
+        print(self.data[ticker].head())
+        short_sma = self.data[ticker].rolling(short_ma).mean()
+        long_sma = self.data[ticker].rolling(long_ma).mean()
+        # self.data[ticker].columns = [ticker]
+        # print(self.data[ticker].columns)
+        # target weights
+        tw = long_sma.copy()
+        tw[short_sma > long_sma] = 1.0
+        tw[short_sma <= long_sma] = -1.0
+        tw[long_sma.isnull()] = 0.0
+
+        # here we specify the children (3rd) arguemnt to make sure the strategy
+        # has the proper universe. This is necessary in strategies of strategies
+        s = bt.Strategy(name, [WeighTarget(tw), bt.algos.Rebalance()], [ticker])
+        # tmp = pd.DataFrame()
+        # tmp = self.data[ticker]
+        # print(ticker)
+        #
+        # tmp.columns = ['Date', ticker]
+        # print(tmp.columns)
+        # print(tmp.head())
+        return bt.Backtest(s, self.data)
+
     def run(self, selected_tickers, start=None, end=None):
 
+        t1 = self.ma_cross('galp:pl', name='galp_ma_cross')
+        t2 = self.ma_cross('bcp:pl', name='bcp_ma_cross')
 
-        sma10 = self.above_sma(selected_tickers, sma_per=10, name='sma10')
-        # sma20 = above_sma(tickers, sma_per=20, name='sma20')
-        # sma40 = above_sma(tickers, sma_per=40, name='sma40')
-        # benchmark = long_only_ew('spy', name='spy')
-
-        # run all the backtests!
-        res = bt.run(sma10)
+        # let's run these strategies now
+        res = bt.run(t1, t2)
         print(res.display())
         print(res.get_transactions())
 
-
 if __name__ == "__main__":
-    test = Backtest()
+    test = Backtest(tickers=['galp:pl','bcp:pl'])
 
-    test.run('galp')
+    res = test.run(['galp:pl'])
+    print(res.display())
+    res.plot()

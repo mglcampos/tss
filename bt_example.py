@@ -64,6 +64,25 @@ def above_sma(tickers, sma_per=50, start='2010-01-01', name='above_sma'):
     # now we create the backtest
     return bt.Backtest(s, data)
 
+def ma_cross(tickers, start='2010-01-01',
+             short_ma=50, long_ma=200, name='ma_cross'):
+    # these are all the same steps as above
+    data = bt.get(ticker, start=start)
+    short_sma = data.rolling(short_ma).mean()
+    long_sma  = data.rolling(long_ma).mean()
+
+    # target weights
+    tw = long_sma.copy()
+    tw[short_sma > long_sma] = 1.0
+    tw[short_sma <= long_sma] = -1.0
+    tw[long_sma.isnull()] = 0.0
+
+    # here we specify the children (3rd) arguemnt to make sure the strategy
+    # has the proper universe. This is necessary in strategies of strategies
+    s = bt.Strategy(name, [WeighTarget(tw), bt.algos.Rebalance()], [ticker])
+
+    return bt.Backtest(s, data)
+
 # create the backtests
 tickers = 'aapl,msft,c,gs,ge'
 sma10 = above_sma(tickers, sma_per=10, name='sma10')
