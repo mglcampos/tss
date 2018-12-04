@@ -1,6 +1,7 @@
 
 import bt
 import pandas as pd
+from bt.algos import WeighTarget
 
 # data = pd.read_csv('histdata/stocks_psi_geral/son-pl_daily_01-03-2000_11-02-2018.csv', names = ["open","high","low","close","date"], parse_dates=['date'], index_col=4, date_parser=parse, skiprows=1)
 
@@ -67,7 +68,7 @@ def above_sma(tickers, sma_per=50, start='2010-01-01', name='above_sma'):
 def ma_cross(tickers, start='2010-01-01',
              short_ma=50, long_ma=200, name='ma_cross'):
     # these are all the same steps as above
-    data = bt.get(ticker, start=start)
+    data = bt.get(tickers, start=start)
     short_sma = data.rolling(short_ma).mean()
     long_sma  = data.rolling(long_ma).mean()
 
@@ -79,7 +80,7 @@ def ma_cross(tickers, start='2010-01-01',
 
     # here we specify the children (3rd) arguemnt to make sure the strategy
     # has the proper universe. This is necessary in strategies of strategies
-    s = bt.Strategy(name, [WeighTarget(tw), bt.algos.Rebalance()], [ticker])
+    s = bt.Strategy(name, [WeighTarget(tw), bt.algos.Rebalance()], [tickers])
 
     return bt.Backtest(s, data)
 

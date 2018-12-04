@@ -52,12 +52,16 @@ class WeighTarget(bt.Algo):
         # get target weights on date target.now
         if target.now in self.tw.index:
             w = self.tw.ix[target.now]
-            print(self.tw)
-            print(self.tw.ix[target.now])
+            ## target.universe tem o dataset em contexto
+            # print('\n\r self.tw.ix[target.now] \n\r')
+            # print(self.tw.ix[target.now])
+            # print('\n\r target \n\r')
+            # print(target)
             # w = pd.DataFrame(w)
             # save in temp - this will be used by the weighing algo
             # also dropping any na's just in case they pop up
-            target.temp['weights'] = w
-
+            target.temp['weights'] = w.dropna()
+            if len(target.universe) > 500:
+                print('kek')
         # return True because we want to keep on moving down the stack
         return True
