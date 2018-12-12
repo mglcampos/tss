@@ -34,10 +34,12 @@ Example code:
 """
 
 from ftplib import FTP
+import ftplib
 from io import BytesIO
 import pandas as pd
 import gzip
-
+import os
+import sys
 
 class DWX_Tick_Data():
 
@@ -59,6 +61,16 @@ class DWX_Tick_Data():
     #           Server. Object stores data in a dictionary, keys being of the
     #           format: CURRENCYPAIR-YYYY-MM-DD-HH
     #########################################################################
+    def walk_dir(self):
+        original_dir = self._ftpObj.pwd()
+        print(original_dir)
+        file_dir = {}
+        names = self._ftpObj.nlst()
+        for name in names[2:]:
+            print(original_dir+'/'+name)
+            self._ftpObj.cwd(original_dir+'/'+name)
+            file_dir[name] = self._ftpObj.nlst()[2:]
+        ##TODO CREATE DICT {TICKER: {ASK:{START:X,END:Y}, BID:{START:X, END:Y}}
 
     def _download_hour_(self, _asset='EURUSD', _date='2017-10-01', _hour='22',
                         _ftp_loc_format='{}/{}_ASK_{}_{}.log.gz',

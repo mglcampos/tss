@@ -15,7 +15,7 @@ pd.set_option("display.max_rows",1000)
 from darwinex_data import DWX_Tick_Data
 dwt = DWX_Tick_Data(dwx_ftp_user='mglcampos',
                  dwx_ftp_pass='2a8Ic7yydUVVKB', dwx_ftp_hostname='tickdata.darwinex.com')
-
+print(dwt.walk_dir())
 ## Load data
 
 tickers = ['AUDCAD', 'AUDCHF', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'AUS200',
