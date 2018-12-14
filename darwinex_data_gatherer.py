@@ -19,21 +19,25 @@ if __name__ == '__main__':
                'XBNUSD', 'XBTUSD', 'XETUSD', 'XLCUSD', 'XNGUSD', 'XPDUSD',
                'XPTUSD', 'XRPUSD', 'XTIUSD']
 
-    # files = dwt.walk_dir()
-    # for ticker in tickers:
-    #     print(files[ticker])
-    #     for file in files[ticker]:
-    #         df = dwt._download_hour_(_asset=ticker,
-    #                             _ftp_loc_format=ticker+'/'+file,
-    #                             _verbose=True)
-    #         print(df.head())
+    files = dwt.walk_dir()
+    for ticker in tickers:
+        print(files[ticker])
+        for file in files[ticker]:
+            print(file)
+            df = dwt._download_hour_(_asset=ticker,
+                                _ftp_loc_format=ticker+'/'+file,
+                                _verbose=True)
+            print(df.head())
 
-    file = 'AUDCAD_ASK_2017-10-01_22.log.gz'
-    ticker = 'AUDCAD'
-    date = '2017-10-05'
-    hour='22'
-    df = dwt._download_hour_(_asset=ticker, _date=date, _hour=hour,
-                                        _ftp_loc_format='{}/{}_ASK_{}_{}.log.gz',
-                                        _verbose=True)
-    print(len(df))
-    print(df.head())
+
+
+
+    # file = 'AUDCAD_ASK_2017-10-01_22.log.gz'
+    # ticker = 'AUDCAD'
+    # date = '2017-10-05'
+    # hour='22'
+    # df = dwt._download_hour_(_asset=ticker, _date=date, _hour=hour,
+    #                                     _ftp_loc_format='{}/{}_ASK_{}_{}.log.gz',
+    #                                     _verbose=True)
+    # print(len(df))
+    # print(df.head())

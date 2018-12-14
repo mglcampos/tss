@@ -67,16 +67,22 @@ class DWX_Tick_Data():
         file_dir = {}
         names = self._ftpObj.nlst()
         for name in names[2:]:
-            print(original_dir+'/'+name)
+            print(original_dir+name)
             self._ftpObj.cwd(original_dir+'/'+name)
             file_dir[name] = self._ftpObj.nlst()[2:]
-        ##TODO CREATE DICT {TICKER: {ASK:{START:X,END:Y}, BID:{START:X, END:Y}}
+
+        ## Get back to original dir
+        self._ftpObj.cwd(original_dir)
+        return file_dir
 
     def _download_hour_(self, _asset='EURUSD', _date='2017-10-01', _hour='22',
                         _ftp_loc_format='{}/{}_ASK_{}_{}.log.gz',
                         _verbose=False):
+        try:
+            _file = _ftp_loc_format.format(_asset, _asset, _date, _hour)
+        except:
+            _file = _ftp_loc_format
 
-        _file = _ftp_loc_format.format(_asset, _asset, _date, _hour)
         _key = '{}-{}-{}'.format(_asset, _date, _hour)
 
         self._virtual_dl = BytesIO()
