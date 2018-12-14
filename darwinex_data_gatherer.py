@@ -2,6 +2,7 @@
 from darwinex_data import DWX_Tick_Data
 from requests import Session
 import logging
+from datetime import datetime as dt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='opentsdb-influxdb.txt', filemode='w')
 logger = logging.getLogger()
@@ -18,20 +19,19 @@ influx_host = 'http://localhost:8086/write?u={}&p?{}&db={}&u={}&p={}&rp={}&preci
 def write_tick_to_influx(df, quote, ticker):
     """."""
 
-    lp = ''
-    source = 'IB'
-    s = 'IBUS30-2'
+    lp_post = ''
 
-    for t in df.index:
-        d = (t - dt(1970,1,1)).total_seconds()
-        if len(str(timestamp)) == 10:
-            d = d * 1000 + 1
-        p = ask[timestamp]
-        ask_data_string1 += "{},source={},quote={},symbol={} value={} {}\n".format('markets', source, q, s, str(float(p)), str(d))
-        ask_data_string2 += "{},source={},symbol={} value={} {}\n".format(q, source, s, str(float(p)), str(d))
-        ask_data_string3 += "{},source={},quote={} value={} {}\n".format(s, source, q, str(float(p)), str(d))
+    for row in df.itertuples:
+        t = getattr(row, 'Index')
+        price = getattr(row, quote)
+        size = getattr(row, 'size')
+        d = t.timestamp()
+        # if len(str(d)) == 10:
+        #     d = d * 1000 + 1
 
-    res = httpsession.post(url_string, data=ask_data_string1)
+        lp_post += "{},quote={} price={},size={} {}\n".format(ticker, quote, price, size, str(d))
+
+    res = httpsession.post(influx_host, data=lp_post)
 
     if res.status_code != 204:
         ##todo change quote to be dynamic
@@ -61,14 +61,18 @@ if __name__ == '__main__':
     for ticker in tickers:
         print(files[ticker])
         for file in files[ticker]:
+            if 'ASK' in file:
+                quote = 'ask'
+            else:
+                quote = 'bid'
+
             print(file)
             df = dwt._download_hour_(_asset=ticker,
                                 _ftp_loc_format=ticker+'/'+file,
                                 _verbose=True)
+            write_tick_to_influx(df, quote, ticker)
             print(df.head())
         break
-
-
 
     # file = 'AUDCAD_ASK_2017-10-01_22.log.gz'
     # ticker = 'AUDCAD'
