@@ -27,8 +27,6 @@ if __name__ == '__main__':
     #                             _ftp_loc_format=ticker+'/'+file,
     #                             _verbose=True)
     #         print(df.head())
-    #         break
-    #     break
 
     file = 'AUDCAD_ASK_2017-10-01_22.log.gz'
     ticker = 'AUDCAD'
@@ -38,3 +36,4 @@ if __name__ == '__main__':
                                         _ftp_loc_format='{}/{}_ASK_{}_{}.log.gz',
                                         _verbose=True)
     print(len(df))
+    print(df.head())

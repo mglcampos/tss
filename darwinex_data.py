@@ -91,7 +91,7 @@ class DWX_Tick_Data():
             _log = gzip.open(self._virtual_dl)
 
             # Get bytes into local DB as list of lists
-            self._asset_db[_key] = [line.strip().decode().split(',') for line in _log]
+            self._asset_db[_key] = [line.strip().decode().split(',') for line in _log if len(line) > 1]
 
             # Construct DataFrame
             _temp = self._asset_db[_key]
