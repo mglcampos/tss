@@ -4,7 +4,7 @@ from requests import Session
 import logging
 from datetime import datetime as dt
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='opentsdb-influxdb.txt', filemode='w')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='ftp-influxdb.log', filemode='w')
 logger = logging.getLogger()
 httpsession = Session()
 ## Influx
@@ -34,11 +34,10 @@ def write_tick_to_influx(df, quote, ticker):
     res = httpsession.post(influx_host, data=lp_post)
 
     if res.status_code != 204:
-        ##todo change quote to be dynamic
-        logger.error('ERROR WRITING TO INFLUXDB FOR SYMBOL {}, SOURCE {} AND QUOTE {}.'.format(s, source, 'bid'))
+        logger.error('ERROR WRITING TO INFLUXDB FOR SYMBOL {} AND QUOTE {}.'.format(ticker, quote))
     # sleep(0.1)
 
-    logger.info('BID SERIES WRITTEN TO INFLUX AT {}.'.format(dt.now()))
+    logger.info('{}-{} SERIES WRITTEN TO INFLUX AT {}.'.format(ticker, quote, str(dt.now())))
 
 if __name__ == '__main__':
 
@@ -65,7 +64,7 @@ if __name__ == '__main__':
                 quote = 'ask'
             else:
                 quote = 'bid'
-
+            logger.info('Downloading {}......'.format(file))
             print(file)
             df = dwt._download_hour_(_asset=ticker,
                                 _ftp_loc_format=ticker+'/'+file,
