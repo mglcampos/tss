@@ -72,7 +72,7 @@ if __name__ == '__main__':
                 write_tick_to_influx(df, quote, ticker)
             except Exception as e:
                 logger.error(str(e))
-                logger.error('COULDNT WRITE FILE {} TO INFLUX .'.format(file))
+                logger.error('COULDNT WRITE FILE {} TO INFLUX.'.format(file))
                 break
 
     # file = 'AUDCAD_ASK_2017-10-01_22.log.gz'
