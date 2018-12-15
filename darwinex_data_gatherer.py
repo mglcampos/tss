@@ -23,7 +23,7 @@ def write_tick_to_influx(df, quote, ticker):
 
     for row in df.itertuples():
         t = getattr(row, 'Index')
-        price = getattr(row, quote)
+        price = getattr(row, 'ask')
         size = getattr(row, 'size')
         d = int(t.timestamp() * 1000 * 1000 * 1000)
 
