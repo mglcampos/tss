@@ -21,20 +21,18 @@ def write_tick_to_influx(df, quote, ticker):
 
     lp_post = ''
 
-    for row in df.itertuples:
+    for row in df.itertuples():
         t = getattr(row, 'Index')
         price = getattr(row, quote)
         size = getattr(row, 'size')
-        d = t.timestamp()
-        # if len(str(d)) == 10:
-        #     d = d * 1000 + 1
+        d = int(t.timestamp() * 1000 * 1000 * 1000)
 
         lp_post += "{},quote={} price={},size={} {}\n".format(ticker, quote, price, size, str(d))
 
     res = httpsession.post(influx_host, data=lp_post)
 
     if res.status_code != 204:
-        logger.error('ERROR WRITING TO INFLUXDB FOR SYMBOL {} AND QUOTE {}.'.format(ticker, quote))
+        logger.error('ERROR, CODE {} WHEN WRITING TO INFLUXDB FOR SYMBOL {} AND QUOTE {}.'.format(str(res.status_code), ticker, quote))
     # sleep(0.1)
 
     logger.info('{}-{} SERIES WRITTEN TO INFLUX AT {}.'.format(ticker, quote, str(dt.now())))
@@ -69,9 +67,10 @@ if __name__ == '__main__':
             df = dwt._download_hour_(_asset=ticker,
                                 _ftp_loc_format=ticker+'/'+file,
                                 _verbose=True)
+            # print(df.head())
             write_tick_to_influx(df, quote, ticker)
-            print(df.head())
-        break
+
+        # break
 
     # file = 'AUDCAD_ASK_2017-10-01_22.log.gz'
     # ticker = 'AUDCAD'

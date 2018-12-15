@@ -70,7 +70,7 @@ class DWX_Tick_Data():
             print(original_dir+name)
             self._ftpObj.cwd(original_dir+'/'+name)
             file_dir[name] = self._ftpObj.nlst()[2:]
-
+            # break ## todo remove this
         ## Get back to original dir
         self._ftpObj.cwd(original_dir)
         return file_dir
