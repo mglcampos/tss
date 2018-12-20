@@ -8,8 +8,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger()
 httpsession = Session()
 ## Influx
-user = 'root'
-pswd = 'root'
+user = 'admin'
+pswd = 'jndm4jr5jndm4jr6'
 rp = 'autogen'
 precision = 'ns'
 db = 'darwinex'
