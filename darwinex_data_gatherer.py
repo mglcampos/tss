@@ -54,7 +54,7 @@ if __name__ == '__main__':
     #            'XBNUSD', 'XBTUSD', 'XETUSD', 'XLCUSD', 'XNGUSD', 'XPDUSD',
     #            'XPTUSD', 'XRPUSD', 'XTIUSD']
 
-    tickers = ['LOCATION', 'NDXm', 'NZDCAD',
+    tickers = ['NDXm', 'NZDCAD',
                'NZDCHF', 'NZDJPY', 'NZDUSD', 'SPN35', 'SPXm', 'STOXX50E', 'UK100',
                'USDCAD', 'USDCHF', 'USDHKD', 'USDJPY', 'USDMXN', 'USDNOK',
                'USDSEK', 'USDSGD', 'USDTRY', 'WS30', 'WS30m', 'XAGUSD', 'XAUUSD',
