@@ -17,8 +17,13 @@ db = 'darwinex'
 influx_host = 'http://localhost:8086/write?u={}&p?{}&db={}&u={}&p={}&rp={}&precision={}'.format(user, pswd, db,
                                                                                                 user, pswd, rp, precision)
 
-def find_last_timestamp(ticker, quote):
+def find_last_timestamp(ticker, quote, influx_client=None):
     """Finds the most recent point written and its timestamp."""
+    if influx_client is None:
+        influx_client = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
+    result = list(influx_client.query("Select last(price) from {} where quote='{}'".format(ticker, quote)))[0]
+    print(result[0])
+    ##todo convert to datetime
     pass
 
 def decode_filename(filename, quote):
