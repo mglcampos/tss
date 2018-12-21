@@ -21,18 +21,18 @@ def find_last_timestamp(ticker, quote, influx_client=None):
     """Finds the most recent point written and its timestamp."""
     if influx_client is None:
         influx_client = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
-    result = list(influx_client.query("Select last(price) from {} where quote='{}'".format(ticker, quote)))[0]
-    print(result[0])
-    ##todo convert to datetime
-    pass
+    timestamp = list(influx_client.query("Select last(price) from {} where quote='{}'".format(ticker, quote)))[0][0]['time']
+    dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
+
+    return dt_ts
 
 def decode_filename(filename, quote):
     """Retrieves the date in the filename in datetime."""
    
-    time_string = filename.split(quote.upper+'_')[1].split('.log')[0]
+    time_string = filename.split(quote.upper()+'_')[1].split('.log')[0]
     date, hour = time_string.split('_')
-    date = dt.strptime(date, '%Y-%M-%d').replace(hour=int(hour))
-    print(date)
+    date = dt.strptime(date, '%Y-%m-%d').replace(hour=int(hour))
+
     return date
 
 
