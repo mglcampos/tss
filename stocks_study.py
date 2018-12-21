@@ -4,6 +4,7 @@ import os
 import chardet
 import time
 import datetime
+
 #
 # def import_data(path = 'histdata/stocks_usd_darwinex'):
 #

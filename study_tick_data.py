@@ -36,7 +36,7 @@ if __name__ == '__main__':
     pvalues = []
     for day in range(1,28):
         try:
-            start = dt(2018,2,day,9,0)
+            start = dt(2018,12,day,9,0)
             period = timedelta(hours=24)
             end = start + period
             start_epoch = int(float(start.timestamp())) * 1000 * 1000 * 1000
@@ -44,14 +44,14 @@ if __name__ == '__main__':
 
             db = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
 
-            dep = 'EURNZD'
-            result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(30s)".format(dep, str(start_epoch), str(end_epoch))))[0]
+            dep = 'EURNOK'
+            result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(1s)".format(dep, str(start_epoch), str(end_epoch))))[0]
             # print(len(result))
             # print(result[0],result[1])
             dep_df = influx_to_pandas(result)
 
-            indep = 'EURAUD'
-            result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(30s)".format(indep, str(start_epoch), str(end_epoch))))[0]
+            indep = 'EURSEK'
+            result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(1s)".format(indep, str(start_epoch), str(end_epoch))))[0]
             # print(len(result))
             # print(result[0],result[1])
             indep_df = influx_to_pandas(result)

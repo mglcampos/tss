@@ -3,6 +3,7 @@ from darwinex_data import DWX_Tick_Data
 from requests import Session
 import logging
 from datetime import datetime as dt
+from influxdb import InfluxDBClient
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='ftp-influxdb.log', filemode='w')
 logger = logging.getLogger()
@@ -15,6 +16,20 @@ precision = 'ns'
 db = 'darwinex'
 influx_host = 'http://localhost:8086/write?u={}&p?{}&db={}&u={}&p={}&rp={}&precision={}'.format(user, pswd, db,
                                                                                                 user, pswd, rp, precision)
+
+def find_last_timestamp(ticker, quote):
+    """Finds the most recent point written and its timestamp."""
+    pass
+
+def decode_filename(filename, quote):
+    """Retrieves the date in the filename in datetime."""
+   
+    time_string = filename.split(quote.upper+'_')[1].split('.log')[0]
+    date, hour = time_string.split('_')
+    date = dt.strptime(date, '%Y-%M-%d').replace(hour=int(hour))
+    print(date)
+    return date
+
 
 def write_tick_to_influx(df, quote, ticker):
     """."""
