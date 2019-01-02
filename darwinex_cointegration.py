@@ -45,10 +45,19 @@ def influx_to_pandas(result):
     return df.drop(['time'], axis=1)
 
 def find_first_timestamp(ticker, quote, influx_client=None):
-    """Finds the most recent point written and its timestamp."""
+    """Finds the first point written and its timestamp."""
     if influx_client is None:
         influx_client = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
     timestamp = list(influx_client.query("Select first(price) from {} where quote='{}'".format(ticker, quote)))[0][0]['time']
+    dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
+
+    return dt_ts
+
+def find_last_timestamp(ticker, quote, influx_client=None):
+    """Finds the most recent point written and its timestamp."""
+    if influx_client is None:
+        influx_client = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
+    timestamp = list(influx_client.query("Select last(price) from {} where quote='{}'".format(ticker, quote)))[0][0]['time']
     dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
 
     return dt_ts
@@ -77,34 +86,40 @@ def write_coint_to_influx(df, ticker):
 if __name__ == '__main__':
     adf_values = []
     pvalues = []
-    for day in range(1,28):
-        try:
-            start = dt(2018,12,day,9,0)
-            period = timedelta(hours=24)
-            end = start + period
-            start_epoch = int(float(start.timestamp())) * 1000 * 1000 * 1000
-            end_epoch = int(end.timestamp()) * 1000 * 1000 * 1000 ## must be in ns
+    tickers = ['EURUSD', 'EURGBP']
+    db = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
+    for ticker in tickers:
+        # start = dt(2018,12,day,9,0)
+        start = find_first_timestamp(ticker, 'ask', influx_client=db)
+        finish = find_last_timestamp(ticker, 'ask', influx_client=db)
 
-            db = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
+        period = timedelta(hours=24)
 
-            dep = 'EURNOK'
-            result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(1s)".format(dep, str(start_epoch), str(end_epoch))))[0]
-            # print(len(result))
-            # print(result[0],result[1])
-            dep_df = influx_to_pandas(result)
+        for indep in tickers:
+            if ticker == indep:
+                continue
+            while start < finish:
+                try:
+                    end = start + period
+                    start_epoch = int(float(start.timestamp())) * 1000 * 1000 * 1000
+                    end_epoch = int(end.timestamp()) * 1000 * 1000 * 1000  ## must be in ns
+                    dep = ticker
+                    result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(1s)".format(dep, str(start_epoch), str(end_epoch))))[0]
+                    # print(len(result))
+                    # print(result[0],result[1])
+                    dep_df = influx_to_pandas(result)
 
-            indep = 'EURSEK'
-            result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(1s)".format(indep, str(start_epoch), str(end_epoch))))[0]
-            # print(len(result))
-            # print(result[0],result[1])
-            indep_df = influx_to_pandas(result)
-            # print(indep_df.head())
+                    result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(1s)".format(indep, str(start_epoch), str(end_epoch))))[0]
+                    # print(len(result))
+                    # print(result[0],result[1])
+                    indep_df = influx_to_pandas(result)
+                    # print(indep_df.head())
 
-            engle, adf = cointegration(dep_df['last'], indep_df['last'])
-            print(adf)
-            adf_values.append(float(adf[0]))
-            pvalues.append(float(adf[1]))
-        except Exception as e:
-            print(e)
+                    adf = cointegration(dep_df['last'], indep_df['last'])
+                    print(adf)
+                    adf_values.append(float(adf[0]))
+                    pvalues.append(float(adf[1]))
+                except Exception as e:
+                    print(e)
 
     print("Mean adf value is {} and mean p-value is {}.".format(str(sum(adf_values)/len(adf_values)), str(sum(pvalues)/len(pvalues))))
