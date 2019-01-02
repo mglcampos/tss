@@ -17,7 +17,7 @@ pswd = 'jndm4jr5jndm4jr6'
 rp = 'autogen'
 precision = 'ns'
 db = 'darwinex'
-influx_host = 'http://localhost:8086/write?u={}&p?{}&db={}&u={}&p={}&rp={}&precision={}'.format(user, pswd, db,
+influx_host = 'http://104.248.41.39:8086/write?u={}&p?{}&db={}&u={}&p={}&rp={}&precision={}'.format(user, pswd, db,
                                                                                                 user, pswd, rp, precision)
 
 def cointegration(df1, df2):
@@ -77,8 +77,8 @@ def write_coint_to_influx(adf, ticker, indep, ts):
     p_value = adf[1]
     measurement = ticker + '.' + indep
 
-    lp_post += "{} adf_value={},adf_p_value={} {}".format(measurement, critical_value, p_value, str(ts))
-
+    lp_post += "{},coint={} value={},p_value={} {}".format(measurement, 'adf', critical_value, p_value, str(ts))
+    # print(lp_post)
     res = httpsession.post(influx_host, data=lp_post)
 
     if res.status_code != 204:
@@ -91,13 +91,18 @@ def write_coint_to_influx(adf, ticker, indep, ts):
 if __name__ == '__main__':
 
     db = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
-    # tickers = ['NDXm', 'NZDCAD',
-    #            'NZDCHF', 'NZDJPY', 'NZDUSD', 'SPN35', 'SPXm', 'STOXX50E', 'UK100',
-    #            'USDCAD', 'USDCHF', 'USDHKD', 'USDJPY', 'USDMXN', 'USDNOK',
-    #            'USDSEK', 'USDSGD', 'USDTRY', 'WS30', 'WS30m', 'XAGUSD', 'XAUUSD',
-    #            'XBNUSD', 'XBTUSD', 'XETUSD', 'XLCUSD', 'XNGUSD', 'XPDUSD',
-    #            'XPTUSD', 'XRPUSD', 'XTIUSD']
-    tickers = ['EURUSD', 'EURGBP']
+    tickers = ['AUDCAD', 'AUDCHF', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'AUS200',
+               'CADCHF', 'CADJPY', 'CHFJPY', 'EURAUD', 'EURCAD', 'EURCHF',
+               'EURGBP', 'EURJPY', 'EURMXN', 'EURNOK', 'EURNZD', 'EURSEK',
+               'EURSGD', 'EURTRY', 'EURUSD', 'FCHI', 'GBPAUD', 'GBPCAD', 'GBPCHF',
+               'GBPJPY', 'GBPMXN', 'GBPNOK', 'GBPNZD', 'GBPSEK', 'GBPTRY',
+               'GBPUSD', 'GDAXIm', 'J225', 'NDXm', 'NZDCAD',
+               'NZDCHF', 'NZDJPY', 'NZDUSD', 'SPN35', 'SPXm', 'STOXX50E', 'UK100',
+               'USDCAD', 'USDCHF', 'USDHKD', 'USDJPY', 'USDMXN', 'USDNOK',
+               'USDSEK', 'USDSGD', 'USDTRY', 'WS30', 'WS30m', 'XAGUSD', 'XAUUSD',
+               'XBNUSD', 'XBTUSD', 'XETUSD', 'XLCUSD', 'XNGUSD', 'XPDUSD',
+               'XPTUSD', 'XRPUSD', 'XTIUSD']
+    # tickers = ['EURUSD', 'EURGBP']
     frequencies = ['5s', '15s', '30s', '1m', '5m', '15m']
     factors = [1,3,2,2,5,3]
 
@@ -139,6 +144,7 @@ if __name__ == '__main__':
                         try:
                             write_coint_to_influx(adf, ticker, indep, end_epoch)
                         except Exception as e:
+                            logger.error(e)
                             logger.error('COULDNT WRITE COINT TO INFLUX FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}.'.format(freq, start, ticker, indep))
 
                         print(adf)
