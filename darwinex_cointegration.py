@@ -136,6 +136,7 @@ if __name__ == '__main__':
 
                         result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time({})".format(indep, str(start_epoch), str(end_epoch), freq)))[0]
                         print(len(result))
+                        logger.info("SAMPLE SIZE: {}".format(str(len(result))))
                         # print(result[0],result[1])
                         indep_df = influx_to_pandas(result)
                         # print(indep_df.head())
