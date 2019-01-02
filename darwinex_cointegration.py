@@ -120,8 +120,8 @@ if __name__ == '__main__':
                         end = start + period
                         start_epoch = int(float(start.timestamp())) * 1000 * 1000 * 1000
                         end_epoch = int(end.timestamp()) * 1000 * 1000 * 1000  ## must be in ns
-                        print('STARTING FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}.'.format(freq, start, ticker, indep))
-                        logger.info('STARTING FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}.'.format(freq, start, ticker,
+                        print('#### STARTING FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}. ####'.format(freq, start, ticker, indep))
+                        logger.info('#### STARTING FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}. ####'.format(freq, start, ticker,
                                                                                                 indep))
                         dep = ticker
                         result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time({})".format(dep, str(start_epoch), str(end_epoch), freq)))[0]
@@ -135,14 +135,14 @@ if __name__ == '__main__':
                         indep_df = influx_to_pandas(result)
                         # print(indep_df.head())
 
-                        adf = cointegration(dep_df['last'], indep_df['last'])
+                        adf = cointegration(dep_df['last'], indep_df['last']) ## todo column name is last because agg function is last
                         try:
                             write_coint_to_influx(adf, ticker, indep, end_epoch)
                         except Exception as e:
                             logger.error('COULDNT WRITE COINT TO INFLUX FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}.'.format(freq, start, ticker, indep))
 
                         print(adf)
-                        logger.info(str(adf))
+                        logger.info("ADF: {}".format(str(adf)))
 
                         adf_values.append(float(adf[0]))
                         pvalues.append(float(adf[1]))
