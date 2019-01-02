@@ -81,45 +81,51 @@ def write_coint_to_influx(df, ticker):
         logger.error('ERROR, CODE {} WHEN WRITING TO INFLUXDB FOR SYMBOL {} AND QUOTE {}.'.format(str(res.status_code), ticker, quote))
     # sleep(0.1)
 
-    logger.info('{}-{} SERIES WRITTEN TO INFLUX AT {}.'.format(ticker, quote, str(dt.now())))
+    logger.info('{}-{} SERIES WRITTEN TO INFLUX AT {}.'.format(ticker, 'coint', str(dt.now())))
 
 if __name__ == '__main__':
     adf_values = []
     pvalues = []
-    tickers = ['EURUSD', 'EURGBP']
     db = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
+
+    tickers = ['EURUSD', 'EURGBP']
+    frequencies = ['1s', '30s', '1m', '5m', '15m']
+
     for ticker in tickers:
         # start = dt(2018,12,day,9,0)
-        start = find_first_timestamp(ticker, 'ask', influx_client=db)
+        period = timedelta(hours=24)
+        start = find_first_timestamp(ticker, 'ask', influx_client=db) - period
         finish = find_last_timestamp(ticker, 'ask', influx_client=db)
 
-        period = timedelta(hours=24)
 
         for indep in tickers:
             if ticker == indep:
                 continue
-            while start < finish:
-                try:
-                    end = start + period
-                    start_epoch = int(float(start.timestamp())) * 1000 * 1000 * 1000
-                    end_epoch = int(end.timestamp()) * 1000 * 1000 * 1000  ## must be in ns
-                    dep = ticker
-                    result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(1s)".format(dep, str(start_epoch), str(end_epoch))))[0]
-                    # print(len(result))
-                    # print(result[0],result[1])
-                    dep_df = influx_to_pandas(result)
+            for freq in frequencies:
+                while start < finish:
+                    try:
+                        start += period + timedelta(milliseconds=1)
+                        end = start + period
+                        start_epoch = int(float(start.timestamp())) * 1000 * 1000 * 1000
+                        end_epoch = int(end.timestamp()) * 1000 * 1000 * 1000  ## must be in ns
 
-                    result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time(1s)".format(indep, str(start_epoch), str(end_epoch))))[0]
-                    # print(len(result))
-                    # print(result[0],result[1])
-                    indep_df = influx_to_pandas(result)
-                    # print(indep_df.head())
+                        dep = ticker
+                        result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time({})".format(dep, str(start_epoch), str(end_epoch), freq)))[0]
+                        # print(len(result))
+                        # print(result[0],result[1])
+                        dep_df = influx_to_pandas(result)
 
-                    adf = cointegration(dep_df['last'], indep_df['last'])
-                    print(adf)
-                    adf_values.append(float(adf[0]))
-                    pvalues.append(float(adf[1]))
-                except Exception as e:
-                    print(e)
+                        result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time({})".format(indep, str(start_epoch), str(end_epoch), freq)))[0]
+                        # print(len(result))
+                        # print(result[0],result[1])
+                        indep_df = influx_to_pandas(result)
+                        print(indep_df.head())
+
+                        adf = cointegration(dep_df['last'], indep_df['last'])
+                        print(adf)
+                        adf_values.append(float(adf[0]))
+                        pvalues.append(float(adf[1]))
+                    except Exception as e:
+                        print(e)
 
     print("Mean adf value is {} and mean p-value is {}.".format(str(sum(adf_values)/len(adf_values)), str(sum(pvalues)/len(pvalues))))
