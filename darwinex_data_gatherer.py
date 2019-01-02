@@ -22,7 +22,11 @@ def find_last_timestamp(ticker, quote, influx_client=None):
     if influx_client is None:
         influx_client = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
     timestamp = list(influx_client.query("Select last(price) from {} where quote='{}'".format(ticker, quote)))[0][0]['time']
-    dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
+    try:
+        dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
+    except:
+        dt_ts = dt.strptime(timestamp[:-4] + 'Z',
+                            '%Y-%m-%dT%H:%M:%S.Z')  ## no conversion available to ns, reduce to us
 
     return dt_ts
 

@@ -49,8 +49,11 @@ def find_first_timestamp(ticker, quote, influx_client=None):
     if influx_client is None:
         influx_client = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
     timestamp = list(influx_client.query("Select first(price) from {} where quote='{}'".format(ticker, quote)))[0][0]['time']
-    dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
-
+    try:
+        dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
+    except:
+        dt_ts = dt.strptime(timestamp[:-4] + 'Z',
+                            '%Y-%m-%dT%H:%M:%S.Z')  ## no conversion available to ns, reduce to us
     return dt_ts
 
 def find_last_timestamp(ticker, quote, influx_client=None):
@@ -58,57 +61,68 @@ def find_last_timestamp(ticker, quote, influx_client=None):
     if influx_client is None:
         influx_client = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
     timestamp = list(influx_client.query("Select last(price) from {} where quote='{}'".format(ticker, quote)))[0][0]['time']
-    dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
+    try:
+        dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
+    except:
+        dt_ts = dt.strptime(timestamp[:-4] + 'Z',
+                            '%Y-%m-%dT%H:%M:%S.Z')  ## no conversion available to ns, reduce to us
 
     return dt_ts
 
-def write_coint_to_influx(df, ticker):
+def write_coint_to_influx(adf, ticker, indep, ts):
     """."""
 
     lp_post = ''
+    critical_value = adf[0]
+    p_value = adf[1]
+    measurement = ticker + '.' + indep
 
-    for row in df.itertuples():
-        t = getattr(row, 'Index')
-        price = getattr(row, 'ask')
-        size = getattr(row, 'size')
-        d = int(t.timestamp() * 1000 * 1000 * 1000)
-        ## todo change this !!!!!!!!!!!
-        lp_post += "{},quote={} price={},size={} {}\n".format(ticker, quote, price, size, str(d))
+    lp_post += "{} adf_value={},adf_p_value={} {}".format(measurement, critical_value, p_value, str(ts))
 
     res = httpsession.post(influx_host, data=lp_post)
 
     if res.status_code != 204:
-        logger.error('ERROR, CODE {} WHEN WRITING TO INFLUXDB FOR SYMBOL {} AND QUOTE {}.'.format(str(res.status_code), ticker, quote))
+        logger.error('ERROR, CODE {} WHEN WRITING COINT TO INFLUXDB FOR SYMBOL {}.'.format(str(res.status_code), ticker))
+        raise Exception(str(res.status_code))
     # sleep(0.1)
 
-    logger.info('{}-{} SERIES WRITTEN TO INFLUX AT {}.'.format(ticker, 'coint', str(dt.now())))
+    logger.info('{}-{} COINT SERIES WRITTEN TO INFLUX AT {}.'.format(ticker, 'coint', str(dt.now())))
 
 if __name__ == '__main__':
-    adf_values = []
-    pvalues = []
+
     db = InfluxDBClient('104.248.41.39', 8086, 'admin', 'jndm4jr5jndm4jr6', 'darwinex')
-
+    # tickers = ['NDXm', 'NZDCAD',
+    #            'NZDCHF', 'NZDJPY', 'NZDUSD', 'SPN35', 'SPXm', 'STOXX50E', 'UK100',
+    #            'USDCAD', 'USDCHF', 'USDHKD', 'USDJPY', 'USDMXN', 'USDNOK',
+    #            'USDSEK', 'USDSGD', 'USDTRY', 'WS30', 'WS30m', 'XAGUSD', 'XAUUSD',
+    #            'XBNUSD', 'XBTUSD', 'XETUSD', 'XLCUSD', 'XNGUSD', 'XPDUSD',
+    #            'XPTUSD', 'XRPUSD', 'XTIUSD']
     tickers = ['EURUSD', 'EURGBP']
-    frequencies = ['1s', '30s', '1m', '5m', '15m']
+    frequencies = ['5s', '15s', '30s', '1m', '5m', '15m']
+    factors = [1,3,2,2,5,3]
 
+    logger.info("TICKERS: {}".format(tickers))
+    logger.info("FREQUENCIES: {}".format(frequencies))
     for ticker in tickers:
-        # start = dt(2018,12,day,9,0)
-        period = timedelta(hours=24)
-        start = find_first_timestamp(ticker, 'ask', influx_client=db) - period
-        finish = find_last_timestamp(ticker, 'ask', influx_client=db)
-
-
+        adf_values = []
+        pvalues = []
         for indep in tickers:
             if ticker == indep:
                 continue
-            for freq in frequencies:
+            for i, freq in enumerate(frequencies):
+                # start = dt(2018,12,day,9,0)
+                period = timedelta(hours=24*factors[i])
+                start = find_first_timestamp(indep, 'ask', influx_client=db) - period
+                finish = find_last_timestamp(indep, 'ask', influx_client=db)
                 while start < finish:
                     try:
                         start += period + timedelta(milliseconds=1)
                         end = start + period
                         start_epoch = int(float(start.timestamp())) * 1000 * 1000 * 1000
                         end_epoch = int(end.timestamp()) * 1000 * 1000 * 1000  ## must be in ns
-
+                        print('STARTING FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}.'.format(freq, start, ticker, indep))
+                        logger.info('STARTING FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}.'.format(freq, start, ticker,
+                                                                                                indep))
                         dep = ticker
                         result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time({})".format(dep, str(start_epoch), str(end_epoch), freq)))[0]
                         # print(len(result))
@@ -116,16 +130,25 @@ if __name__ == '__main__':
                         dep_df = influx_to_pandas(result)
 
                         result = list(db.query("Select last(price) from {} where time > {} and time < {} group by time({})".format(indep, str(start_epoch), str(end_epoch), freq)))[0]
-                        # print(len(result))
+                        print(len(result))
                         # print(result[0],result[1])
                         indep_df = influx_to_pandas(result)
-                        print(indep_df.head())
+                        # print(indep_df.head())
 
                         adf = cointegration(dep_df['last'], indep_df['last'])
+                        try:
+                            write_coint_to_influx(adf, ticker, indep, end_epoch)
+                        except Exception as e:
+                            logger.error('COULDNT WRITE COINT TO INFLUX FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}.'.format(freq, start, ticker, indep))
+
                         print(adf)
+                        logger.info(str(adf))
+
                         adf_values.append(float(adf[0]))
                         pvalues.append(float(adf[1]))
                     except Exception as e:
                         print(e)
+                        logger.error(e)
 
-    print("Mean adf value is {} and mean p-value is {}.".format(str(sum(adf_values)/len(adf_values)), str(sum(pvalues)/len(pvalues))))
+        print("Mean adf value for {} and {} is {} and mean p-value is {}.".format(ticker, indep, str(sum(adf_values)/len(adf_values)), str(sum(pvalues)/len(pvalues))))
+        logger.info("\nMean adf value for {} and {} is {} and mean p-value is {}.\n".format(ticker, indep, str(sum(adf_values)/len(adf_values)), str(sum(pvalues)/len(pvalues))))
