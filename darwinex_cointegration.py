@@ -77,7 +77,7 @@ def write_coint_to_influx(adf, ticker, indep, freq, ts):
     p_value = adf[1]
     measurement = ticker + '.' + indep
 
-    lp_post += "{},coint={},freq={] value={},p_value={} {}".format(measurement, 'adf',freq, critical_value, p_value, str(ts))
+    lp_post += "{},coint={},freq={} value={},p_value={} {}".format(measurement, 'adf', freq, critical_value, p_value, str(ts))
     # print(lp_post)
     res = httpsession.post(influx_host, data=lp_post)
 
