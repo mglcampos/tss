@@ -69,7 +69,7 @@ def find_last_timestamp(ticker, quote, influx_client=None):
 
     return dt_ts
 
-def write_coint_to_influx(adf, ticker, indep, ts):
+def write_coint_to_influx(adf, ticker, indep, freq, ts):
     """."""
 
     lp_post = ''
@@ -77,7 +77,7 @@ def write_coint_to_influx(adf, ticker, indep, ts):
     p_value = adf[1]
     measurement = ticker + '.' + indep
 
-    lp_post += "{},coint={} value={},p_value={} {}".format(measurement, 'adf', critical_value, p_value, str(ts))
+    lp_post += "{},coint={},freq={] value={},p_value={} {}".format(measurement, 'adf',freq, critical_value, p_value, str(ts))
     # print(lp_post)
     res = httpsession.post(influx_host, data=lp_post)
 
@@ -143,7 +143,7 @@ if __name__ == '__main__':
 
                         adf = cointegration(dep_df['last'], indep_df['last']) ## todo column name is last because agg function is last
                         try:
-                            write_coint_to_influx(adf, ticker, indep, end_epoch)
+                            write_coint_to_influx(adf, ticker, indep, freq, end_epoch)
                         except Exception as e:
                             logger.error(e)
                             logger.error('COULDNT WRITE COINT TO INFLUX FOR FREQ: {}, START: {}, DEP: {} AND INDEP: {}.'.format(freq, start, ticker, indep))
