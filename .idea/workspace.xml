@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="adab8c16-b0b2-46d0-adc6-75f7d7e11e34" name="Default Changelist" comment="" />
+    <list default="true" id="adab8c16-b0b2-46d0-adc6-75f7d7e11e34" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ta_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/ta_utils.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,12 +19,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="173" />
-          <entry key="py" value="2528" />
+          <entry key="py" value="2804" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="2701" />
+          <entry key="Python" value="2977" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -29,13 +32,13 @@
           <entry key="CADCHF" value="1" />
           <entry key="CADJPY" value="1" />
           <entry key="csv" value="1" />
-          <entry key="py" value="7" />
+          <entry key="py" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="3" />
-          <entry key="Python" value="7" />
+          <entry key="Python" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
@@ -97,15 +100,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Darwinex Tick Studies.ipynb">
-          <provider selected="true" editor-type-id="ipnb-editor">
-            <state>
-              <selected id="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/study_tick_data.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
@@ -136,11 +130,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/darwinex_cointegration.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-282">
-              <caret line="103" column="66" lean-forward="true" selection-start-line="103" selection-start-column="66" selection-end-line="103" selection-end-column="66" />
+            <state relative-caret-position="285">
+              <caret line="103" column="66" selection-start-line="103" selection-start-column="66" selection-end-line="103" selection-end-column="66" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -151,8 +145,21 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Anaconda3/Lib/_strptime.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6001">
+            <state relative-caret-position="2089">
               <caret line="361" selection-start-line="361" selection-end-line="361" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ta_utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+              <folding>
+                <element signature="e#1#19#0" expanded="true" />
+                <marker date="1546529987584" expanded="true" signature="70:71" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -204,6 +211,7 @@
         <option value="$PROJECT_DIR$/stocks_study.py" />
         <option value="$PROJECT_DIR$/darwinex_data_gatherer.py" />
         <option value="$PROJECT_DIR$/darwinex_cointegration.py" />
+        <option value="$PROJECT_DIR$/ta_utils.py" />
       </list>
     </option>
   </component>
@@ -330,6 +338,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49925926" visible="true" weight="0.116204694" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -402,13 +411,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Anaconda3/Lib/_strptime.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6001">
-          <caret line="361" selection-start-line="361" selection-end-line="361" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Darwinex Tick Studies.ipynb">
       <provider selected="true" editor-type-id="ipnb-editor">
         <state>
@@ -431,13 +433,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="11" column="39" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/performance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -479,10 +474,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/darwinex_cointegration.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-282">
-          <caret line="103" column="66" lean-forward="true" selection-start-line="103" selection-start-column="66" selection-end-line="103" selection-end-column="66" />
+        <state relative-caret-position="285">
+          <caret line="103" column="66" selection-start-line="103" selection-start-column="66" selection-end-line="103" selection-end-column="66" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/performance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/_strptime.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2089">
+          <caret line="361" selection-start-line="361" selection-end-line="361" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ta_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
+            <marker date="1546529987584" expanded="true" signature="70:71" ph="..." />
           </folding>
         </state>
       </provider>
