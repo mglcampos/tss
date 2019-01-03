@@ -52,8 +52,12 @@ def find_first_timestamp(ticker, quote, influx_client=None):
     try:
         dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
     except:
-        dt_ts = dt.strptime(timestamp[:-4] + 'Z',
-                            '%Y-%m-%dT%H:%M:%S.Z')  ## no conversion available to ns, reduce to us
+        try:
+            dt_ts = dt.strptime(timestamp[:-4] + 'Z',
+                                '%Y-%m-%dT%H:%M:%S.Z')  ## no conversion available to ns, reduce to us
+        except:
+            dt_ts = dt.strptime(timestamp[:-4] + 'Z',
+                                '%Y-%m-%dT%H:%M:%SZ')  ## no conversion available to ns, reduce to us
     return dt_ts
 
 def find_last_timestamp(ticker, quote, influx_client=None):
@@ -64,8 +68,12 @@ def find_last_timestamp(ticker, quote, influx_client=None):
     try:
         dt_ts = dt.strptime(timestamp[:-4] + 'Z', '%Y-%m-%dT%H:%M:%S.%fZ') ## no conversion available to ns, reduce to us
     except:
-        dt_ts = dt.strptime(timestamp[:-4] + 'Z',
-                            '%Y-%m-%dT%H:%M:%S.Z')  ## no conversion available to ns, reduce to us
+        try:
+            dt_ts = dt.strptime(timestamp[:-4] + 'Z',
+                                '%Y-%m-%dT%H:%M:%S.Z')  ## no conversion available to ns, reduce to us
+        except:
+            dt_ts = dt.strptime(timestamp[:-4] + 'Z',
+                                '%Y-%m-%dT%H:%M:%SZ')  ## no conversion available to ns, reduce to us
 
     return dt_ts
 
@@ -115,6 +123,15 @@ if __name__ == '__main__':
             if ticker == indep:
                 continue
             for i, freq in enumerate(frequencies):
+                try:
+                    list(db.query("Select * from \"{}\" where freq='{}' limit 1".format(ticker + '.' + indep, freq)))[0][0]['time']
+                    logger.info('ALREADY WROTE {}-{} TO INFLUX. SKIPPING.......'.format(freq, ticker + '.' + indep))
+                    print('ALREADY WROTE {}-{} TO INFLUX. SKIPPING.......'.format(freq, ticker + '.' + indep))
+                    continue  ## Check if already exists
+                except:
+                    logger.info('PREPARING FOR {}'.format(ticker + '.' + indep))
+                    print('PREPARING FOR {}'.format(ticker + '.' + indep))
+                    pass
                 # start = dt(2018,12,day,9,0)
                 period = timedelta(hours=24*factors[i])
                 start = find_first_timestamp(indep, 'ask', influx_client=db) - period
