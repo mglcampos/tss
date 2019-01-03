@@ -17,6 +17,9 @@ def mmi(data):
 
 def alma(data, period):
     """."""
+    # parameters
+    # Sigma = 6
+    # Offset = 0.85
 
     m = floor(0.85*(period-1))
     s = period/6.0
