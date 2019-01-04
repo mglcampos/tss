@@ -61,7 +61,7 @@ class WeighTarget(bt.Algo):
             # save in temp - this will be used by the weighing algo
             # also dropping any na's just in case they pop up
             target.temp['weights'] = w.dropna()
-            if len(target.universe) > 500:
-                print('kek')
+            # if len(target.universe) > 500:
+            #     print('kek')
         # return True because we want to keep on moving down the stack
         return True
