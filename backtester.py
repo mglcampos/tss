@@ -38,7 +38,7 @@ class Backtest():
             end_dt = dt.strptime(end, '%Y-%m-%d')
             start_epoch = int(float(start_dt.timestamp())) * 1000 * 1000 * 1000
             end_epoch = int(end_dt.timestamp()) * 1000 * 1000 * 1000
-            query = "Select spread(price) from {} where time > {} and time < {} group by time({})".format(ticker,
+            query = "Select last(price) from {} where time > {} and time < {} group by time({})".format(ticker,
                                                                                                           str(start_epoch),
                                                                                                           str(end_epoch),
                                                                                                           freq)
@@ -56,9 +56,12 @@ class Backtest():
                 data = data[data.index < end]
         data.index.name = 'Date'
         data.columns = [ticker]
+
+        # data.drop_duplicates(keep='first', inplace=True)
+        data = data.fillna(method='ffill')
+
         data = data.iloc[::-1]
-        # data.drop_duplicates( keep='first', inplace=True)
-        # data = data[data[ticker] != 0.0].dropna()
+
 
         return data
 
@@ -170,6 +173,7 @@ class Backtest():
 
         print(data.head())
         print(data[ticker].where(data[ticker] < 0.0000001).notnull()[data[ticker].where(data[ticker] < 0.0000001).notnull() == True])
+        print(data.isnull().values.any())
 
         fitted_ma = data.rolling(fitted_ma_period).mean()
         short_ma = data.rolling(short_ma_period).mean()
@@ -179,7 +183,7 @@ class Backtest():
         # short_ma = pd.DataFrame(talib.EMA(data[ticker].values, timeperiod=short_ma_period),index=data.index, columns=[ticker])
         # long_ma = pd.DataFrame(talib.EMA(data[ticker].values, timeperiod=long_ma_period),index=data.index, columns=[ticker])
         # print(fitted_ma.head())
-
+        # print(len(fitted_ma), len(short_ma), len(long_ma))
         # target weights
         tw = long_ma.copy()
         tw.columns = [ticker]
@@ -191,26 +195,27 @@ class Backtest():
                 break
             elif tw[ticker].iloc[i] == -1.0:
                 tw[ticker][i] = 0.0
+        print('\nTW HAS VALUES?\n', tw[tw[ticker] > 0.0])
 
-
-        s = bt.Strategy(name, [WeighTarget(tw), bt.algos.Rebalance(), bt.algos.LimitWeights(limit=0.1)], [ticker])
+        # s = bt.Strategy(name, [WeighTarget(tw), bt.algos.Rebalance(), bt.algos.LimitWeights(limit=0.1)], [ticker])
+        s = bt.Strategy(name, [WeighTarget(tw), bt.algos.Rebalance()], [ticker])
         return bt.Backtest(s, data)
 
     def run(self, selected_tickers, start=None, end=None):
 
-        t1 = self.ma_cross('EURUSD', name='eurusd_ma_cross', start='2018-12-03', end='2018-12-5')
-        # t2 = self.ma_cross('EURGBP', name='eurgbp_ma_cross', start='2018-12-03', end='2018-12-5')
+        t1 = self.ma_cross('EURUSD', name='eurusd_ma_cross', start='2018-12-1', end='2018-12-10')
+        t2 = self.ma_cross('EURGBP', name='eurgbp_ma_cross', start='2018-12-1', end='2018-12-10')
         # t1 = self.above_sma('galp:pl')
         # t2 = self.above_sma('bcp:pl')
 
         # let's run these strategies now
-        res = bt.run(t1)
-        res.plot_weights()
+        res = bt.run(t1, t2)
+
         return res
 
 if __name__ == "__main__":
     test = Backtest(tickers=['EURUSD','EURGBP'])
 
     res = test.run(['EURUSD'])
-    # print(res.display())
-    res.plot()
+    print(res.display())
+    # res.plot()
