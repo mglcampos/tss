@@ -64,7 +64,7 @@ def write_tick_to_influx(df, quote, ticker):
 if __name__ == '__main__':
 
     dwt = DWX_Tick_Data(dwx_ftp_user='mglcampos',
-                     dwx_ftp_pass='2a8Ic7yydUVVKB', dwx_ftp_hostname='tickdata.darwinex.com')
+                     dwx_ftp_pass='ZTTyE622PDudLk', dwx_ftp_hostname='tickdata.darwinex.com')
 
     tickers = ['AUDCAD', 'AUDCHF', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'AUS200',
                'CADCHF', 'CADJPY', 'CHFJPY', 'EURAUD', 'EURCAD', 'EURCHF',
@@ -89,22 +89,23 @@ if __name__ == '__main__':
     for ticker in tickers:
         print(files[ticker])
         for file in files[ticker]:
-            if 'ASK' in file:
-                quote = 'ask'
-            else:
-                quote = 'bid'
-            logger.info('Downloading {}......'.format(file))
-            print(file)
-            df = dwt._download_hour_(_asset=ticker,
-                                _ftp_loc_format=ticker+'/'+file,
-                                _verbose=True)
-            # print(df.head())
-            try:
-                write_tick_to_influx(df, quote, ticker)
-            except Exception as e:
-                logger.error(str(e))
-                logger.error('COULDNT WRITE FILE {} TO INFLUX.'.format(file))
-                break
+            if '2019' in file: ## todo use last_timestmap
+                if 'ASK' in file:
+                    quote = 'ask'
+                else:
+                    quote = 'bid'
+                logger.info('Downloading {}......'.format(file))
+                print(file)
+                df = dwt._download_hour_(_asset=ticker,
+                                    _ftp_loc_format=ticker+'/'+file,
+                                    _verbose=True)
+                # print(df.head())
+                try:
+                    write_tick_to_influx(df, quote, ticker)
+                except Exception as e:
+                    logger.error(str(e))
+                    logger.error('COULDNT WRITE FILE {} TO INFLUX.'.format(file))
+                    break
 
     # file = 'AUDCAD_ASK_2017-10-01_22.log.gz'
     # ticker = 'AUDCAD'
