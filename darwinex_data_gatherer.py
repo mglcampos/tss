@@ -64,7 +64,7 @@ def write_tick_to_influx(df, quote, ticker):
 if __name__ == '__main__':
 
     dwt = DWX_Tick_Data(dwx_ftp_user='mglcampos',
-                     dwx_ftp_pass='ZTTyE622PDudLk', dwx_ftp_hostname='tickdata.darwinex.com')
+                     dwx_ftp_pass='6myp6G6R5Id9AA', dwx_ftp_hostname='tickdata.darwinex.com')
 
     tickers = ['AUDCAD', 'AUDCHF', 'AUDJPY', 'AUDNZD', 'AUDUSD', 'AUS200',
                'CADCHF', 'CADJPY', 'CHFJPY', 'EURAUD', 'EURCAD', 'EURCHF',
