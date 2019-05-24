@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="adab8c16-b0b2-46d0-adc6-75f7d7e11e34" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/bt-report-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/bt-report-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Darwinex plotting station.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Darwinex plotting station.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bt-report.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/bt-report.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/darwinex_data_gatherer.py" beforeDir="false" afterPath="$PROJECT_DIR$/darwinex_data_gatherer.py" afterDir="false" />
     </list>
@@ -61,39 +59,43 @@
     <session id="-616968039">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="11" />
+          <entry key="project.closed" value="12" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.13" value="2" />
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.15" value="2" />
-          <entry key="project.open.time.16" value="1" />
+          <entry key="project.open.time.16" value="2" />
           <entry key="project.open.time.17" value="1" />
           <entry key="project.open.time.19" value="2" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="12" />
+          <entry key="project.opened" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="228" />
+          <entry key="py" value="233" />
+          <entry key="txt" value="47" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="228" />
+          <entry key="PLAIN_TEXT" value="47" />
+          <entry key="Python" value="233" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
+          <entry key="ipynb" value="1" />
           <entry key="log" value="1" />
-          <entry key="py" value="10" />
+          <entry key="py" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
+          <entry key="IPNB" value="1" />
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="10" />
+          <entry key="Python" value="11" />
         </counts>
       </usages-collector>
     </session>
@@ -103,20 +105,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/darwinex_data_gatherer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="89" column="28" lean-forward="true" selection-start-line="89" selection-start-column="28" selection-end-line="89" selection-end-column="28" />
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bt-report.ipynb">
+          <provider selected="true" editor-type-id="ipnb-editor">
+            <state>
+              <selected id="4" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/darwinex_data.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bt_example.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="78" column="64" selection-start-line="78" selection-start-column="44" selection-end-line="78" selection-end-column="64" />
+            <state relative-caret-position="340">
+              <caret line="64" column="32" lean-forward="true" selection-start-line="64" selection-start-column="32" selection-end-line="64" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -374,13 +376,35 @@
       <option name="presentableId" value="Default" />
       <updated>1537897307858</updated>
     </task>
+    <task id="LOCAL-00001" summary="darwinex data gatherer changed">
+      <created>1558653204035</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1558653204035</updated>
+    </task>
+    <task id="LOCAL-00002" summary="darwinex data gatherer changed">
+      <created>1558653547083</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1558653547083</updated>
+    </task>
+    <task id="LOCAL-00003" summary="darwinex data gatherer changed">
+      <created>1558653560616</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1558653560616</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49925926" visible="true" weight="0.13174807" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49925926" visible="true" weight="0.13303342" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50074077" side_tool="true" weight="0.1119403" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -411,6 +435,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="darwinex data gatherer changed" />
+    <option name="LAST_COMMIT_MESSAGE" value="darwinex data gatherer changed" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/CADJPY" />
@@ -452,9 +480,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bt_example.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/Darwinex plotting station.ipynb">
       <provider selected="true" editor-type-id="ipnb-editor">
         <state>
@@ -465,13 +490,6 @@
     <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/ffn/core.py" />
     <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/pandas/indexes/base.py" />
     <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/bt/backtest.py" />
-    <entry file="file://$PROJECT_DIR$/bt-report.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/backtester.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="935">
@@ -508,12 +526,29 @@
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Documents/ims/Financial Derivatives/cli_app.py" />
+    <entry file="file://$PROJECT_DIR$/darwinex_data_gatherer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="74" column="64" selection-start-line="74" selection-start-column="64" selection-end-line="74" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/darwinex_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1224">
+          <caret line="78" column="64" selection-start-line="78" selection-start-column="44" selection-end-line="78" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ta_utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stationarity.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/dash_app/app.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -555,20 +590,17 @@
     <entry file="file://$PROJECT_DIR$/backtester_beta.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/stationarity.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/darwinex_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="78" column="64" selection-start-line="78" selection-start-column="44" selection-end-line="78" selection-end-column="64" />
+    <entry file="file://$PROJECT_DIR$/bt-report.ipynb">
+      <provider selected="true" editor-type-id="ipnb-editor">
+        <state>
+          <selected id="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/darwinex_data_gatherer.py">
+    <entry file="file://$PROJECT_DIR$/bt_example.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="89" column="28" lean-forward="true" selection-start-line="89" selection-start-column="28" selection-end-line="89" selection-end-column="28" />
+        <state relative-caret-position="340">
+          <caret line="64" column="32" lean-forward="true" selection-start-line="64" selection-start-column="32" selection-end-line="64" selection-end-column="32" />
         </state>
       </provider>
     </entry>

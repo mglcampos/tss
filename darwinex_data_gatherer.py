@@ -89,7 +89,7 @@ if __name__ == '__main__':
     for ticker in tickers:
         print(files[ticker])
         for file in files[ticker]:
-            if '2019' in file: ## todo use last_timestmap
+            if '2018-12' in file: ## todo use last_timestmap
                 if 'ASK' in file:
                     quote = 'ask'
                 else:
